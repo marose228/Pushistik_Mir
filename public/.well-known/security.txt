@@ -1,0 +1,6 @@
+# Security policy for ПушистикМир
+Contact: mailto:security@pushistikmir.ru
+Contact: https://t.me/pushistik_bot
+Expires: 2026-01-15T00:00:00.000Z
+Preferred-Languages: ru, en
+Canonical: https://pushistikmir.ru/.well-known/security.txt

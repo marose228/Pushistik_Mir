@@ -1,0 +1,21 @@
+# robots.txt для ПушистикМир
+# Разрешаем всем поисковым роботам индексировать сайт
+User-agent: *
+Allow: /
+
+# Запрещаем индексацию служебных страниц
+Disallow: /cart
+Disallow: /checkout
+Disallow: /api/
+Disallow: /private/
+Disallow: /temp/
+Disallow: /admin
+
+# Указываем путь к карте сайта
+Sitemap: https://pushistikmir.ru/sitemap.xml
+
+# Задержка между запросами для Яндекс (в секундах)
+Crawl-delay: 1
+
+# Указываем предпочтительный домен для Google
+Host: https://pushistikmir.ru

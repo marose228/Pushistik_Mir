@@ -74,11 +74,7 @@ const Telegram = () => {
               <div className="absolute inset-0 bg-black/10"></div>
               <div className="text-center relative z-10">
                 <div className="bg-white p-4 rounded-2xl inline-block mb-4 shadow-xl transform hover:scale-105 transition-transform duration-300">
-                  <img 
-                    src="/qr.png" 
-                    alt="QR код Telegram бота" 
-                    className="w-40 h-40 md:w-48 md:h-48 object-contain"
-                  />
+                  <img src="qr.png" />
                 </div>
                 <p className="text-white font-semibold text-lg">@pushistik_bot</p>
                 <p className="text-white/80 text-sm mt-1">Нажми для перехода</p>

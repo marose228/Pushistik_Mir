@@ -106,11 +106,7 @@ const Hero = () => {
           {/* Правая часть - картинка cat.png */}
           <div className="flex-1 relative animate-slide-right">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 min-h-[450px] flex items-center justify-center">
-              <img 
-                src="/cat.png" 
-                alt="Счастливый кот" 
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
+              <img src="cat.png" />
             </div>
             {/* Плавающие бейджи */}
             <div className="absolute -top-4 -right-4 bg-white rounded-2xl shadow-xl p-3 animate-float">

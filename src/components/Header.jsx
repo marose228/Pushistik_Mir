@@ -10,15 +10,7 @@ const Header = ({ cartCount, onCartOpen, wishlistCount, onWishlistOpen, onOrders
         <div className="flex justify-between items-center py-3">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
-            <img 
-              src="/logo.png" 
-              alt="ПушистикМир" 
-              className="w-10 h-10 rounded-xl object-cover"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = 'https://via.placeholder.com/40x40?text=🐾';
-              }}
-            />
+            <img src="logo.png" className="w-10 h-10 rounded-xl object-cover" />
             <span className="font-serif text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               ПушистикМир
             </span>

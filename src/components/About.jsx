@@ -15,11 +15,7 @@ const About = () => {
           {/* Левая часть - фото cat2.png с вращением при наведении */}
             <div className="lg:w-1/2 relative group perspective-1000">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-purple-200 via-pink-200 to-blue-200 min-h-[450px] transition-all duration-500 group-hover:rotate-y-12">
-                <img 
-                src="/cat2.png" 
-                alt="Наши питомцы" 
-                className="w-full h-full object-cover"
-                />
+                <img src="cat2.png" />
             </div>
             <div className="absolute -bottom-6 -right-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-4 shadow-xl group-hover:scale-110 transition-transform duration-300">
                 <div className="text-white text-center">

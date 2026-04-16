@@ -1,9 +1,33 @@
 import { useState, useEffect } from 'react';
-import { X, Package, Clock, CheckCircle, Truck, Eye, Calendar, MapPin, Phone, User } from 'lucide-react';
+import { X, Package, Clock, CheckCircle, Truck, Eye, Calendar, MapPin, Phone, User, Gift, Box } from 'lucide-react';
 
 const OrdersModal = ({ isOpen, onClose, onAddToCart }) => {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [boxes, setBoxes] = useState([]);
+
+  // Генерация летающих коробок при открытии
+  useEffect(() => {
+    if (isOpen) {
+      const floatingBoxes = [];
+      const boxIcons = ['📦', '🎁', '📭', '📫', '📪', '📬'];
+      for (let i = 0; i < 25; i++) {
+        floatingBoxes.push({
+          id: i,
+          left: Math.random() * 100,
+          delay: Math.random() * 5,
+          duration: 4 + Math.random() * 5,
+          size: 25 + Math.random() * 45,
+          opacity: 0.25 + Math.random() * 0.35,
+          icon: boxIcons[Math.floor(Math.random() * boxIcons.length)],
+          rotate: Math.random() * 360,
+        });
+      }
+      setBoxes(floatingBoxes);
+    } else {
+      setBoxes([]);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -40,47 +64,145 @@ const OrdersModal = ({ isOpen, onClose, onAddToCart }) => {
 
   return (
     <>
+      {/* Затемнение */}
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] animate-fade-in" onClick={onClose} />
       
+      {/* Летающие коробки на фоне */}
+      <div className="fixed inset-0 pointer-events-none z-[101] overflow-hidden">
+        {boxes.map((box) => (
+          <div
+            key={box.id}
+            className="absolute animate-float-box"
+            style={{
+              left: `${box.left}%`,
+              bottom: '-80px',
+              animationDelay: `${box.delay}s`,
+              animationDuration: `${box.duration}s`,
+              transform: `rotate(${box.rotate}deg)`,
+            }}
+          >
+            <div 
+              className="text-4xl md:text-5xl"
+              style={{ 
+                fontSize: `${box.size}px`,
+                opacity: box.opacity,
+                filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.1))',
+              }}
+            >
+              {box.icon}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Вторая волна - маленькие коробочки */}
+      <div className="fixed inset-0 pointer-events-none z-[101] overflow-hidden">
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={`box2-${i}`}
+            className="absolute animate-float-box-delayed"
+            style={{
+              left: `${Math.random() * 100}%`,
+              bottom: '-50px',
+              animationDelay: `${Math.random() * 8}s`,
+              animationDuration: `${5 + Math.random() * 6}s`,
+            }}
+          >
+            <Box 
+              className="text-purple-300"
+              style={{ 
+                width: `${20 + Math.random() * 35}px`, 
+                height: `${20 + Math.random() * 35}px`,
+                opacity: 0.2 + Math.random() * 0.3,
+              }} 
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Третья волна - подарочные коробки */}
+      <div className="fixed inset-0 pointer-events-none z-[101] overflow-hidden">
+        {[...Array(10)].map((_, i) => (
+          <div
+            key={`gift-${i}`}
+            className="absolute animate-float-gift"
+            style={{
+              left: `${Math.random() * 100}%`,
+              bottom: '-60px',
+              animationDelay: `${Math.random() * 10}s`,
+              animationDuration: `${6 + Math.random() * 7}s`,
+            }}
+          >
+            <Gift 
+              className="text-pink-400"
+              style={{ 
+                width: `${30 + Math.random() * 40}px`, 
+                height: `${30 + Math.random() * 40}px`,
+                opacity: 0.2 + Math.random() * 0.3,
+              }} 
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Модальное окно */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl max-h-[85vh] bg-white rounded-2xl shadow-2xl z-[102] overflow-hidden animate-modal-in">
+        {/* Заголовок */}
         <div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-purple-50 to-pink-50">
           <div className="flex items-center gap-2">
-            <Package className="w-6 h-6 text-purple-500" />
+            <div className="relative">
+              <Package className="w-6 h-6 text-purple-500 animate-bounce-gentle" />
+              <Package className="w-6 h-6 text-purple-500 absolute top-0 left-0 animate-ping opacity-50" />
+            </div>
             <h2 className="text-xl font-bold text-gray-800">📦 История заказов</h2>
             {orders.length > 0 && (
-              <span className="ml-2 bg-purple-500 text-white text-xs font-bold rounded-full px-2 py-1">
+              <span className="ml-2 bg-purple-500 text-white text-xs font-bold rounded-full px-2 py-1 animate-pulse">
                 {orders.length}
               </span>
             )}
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors hover:scale-110">
+          <button 
+            onClick={onClose}
+            className="p-2 hover:bg-gray-200 rounded-full transition-colors hover:scale-110 hover:rotate-90 duration-300"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
 
+        {/* Содержимое */}
         <div className="overflow-y-auto p-5" style={{ maxHeight: 'calc(85vh - 80px)' }}>
           {orders.length === 0 ? (
             <div className="text-center py-16">
-              <Package className="w-20 h-20 text-gray-300 mx-auto mb-4" />
+              <div className="relative inline-block">
+                <Package className="w-20 h-20 text-gray-300 mx-auto mb-4 animate-float-slow" />
+                <Package className="w-20 h-20 text-purple-200 absolute top-0 left-0 animate-ping opacity-50" />
+              </div>
               <h3 className="text-xl font-semibold text-gray-700 mb-2">История заказов пуста</h3>
               <p className="text-gray-500 mb-6">У вас пока нет оформленных заказов</p>
-              <button onClick={onClose} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-semibold hover:scale-105 transition-all">
+              <button
+                onClick={onClose}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-semibold hover:scale-105 transition-all hover:shadow-lg"
+              >
                 Продолжить покупки
               </button>
             </div>
           ) : (
             <div className="space-y-4">
-              {orders.map((order) => {
+              {orders.map((order, index) => {
                 const statusInfo = getOrderStatus(order.date);
                 const StatusIcon = statusInfo.icon;
                 
                 return (
-                  <div key={order.id} className="bg-gray-50 rounded-xl p-4 hover:shadow-md transition-all">
+                  <div 
+                    key={order.id} 
+                    className="bg-gray-50 rounded-xl p-4 hover:shadow-md transition-all hover:-translate-y-1 duration-300"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
                     <div className="flex flex-wrap justify-between items-start gap-4">
                       <div>
                         <div className="flex items-center gap-3 mb-2">
                           <span className="text-lg font-bold text-gray-800">Заказ #{order.id.toString().slice(-8)}</span>
-                          <span className={`${statusInfo.color} text-white text-xs px-3 py-1 rounded-full flex items-center gap-1`}>
+                          <span className={`${statusInfo.color} text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 animate-pulse`}>
                             <StatusIcon className="w-3 h-3" />
                             {statusInfo.status}
                           </span>
@@ -97,16 +219,16 @@ const OrdersModal = ({ isOpen, onClose, onAddToCart }) => {
                     </div>
 
                     <div className="mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <User className="w-4 h-4 text-purple-500" />
+                      <div className="flex items-center gap-2 text-sm text-gray-600 group">
+                        <User className="w-4 h-4 text-purple-500 group-hover:scale-110 transition-transform" />
                         <span>{order.customer.name}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Phone className="w-4 h-4 text-purple-500" />
+                      <div className="flex items-center gap-2 text-sm text-gray-600 group">
+                        <Phone className="w-4 h-4 text-purple-500 group-hover:scale-110 transition-transform" />
                         <span>{order.customer.phone}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <MapPin className="w-4 h-4 text-purple-500" />
+                      <div className="flex items-center gap-2 text-sm text-gray-600 group">
+                        <MapPin className="w-4 h-4 text-purple-500 group-hover:scale-110 transition-transform" />
                         <span className="truncate">{order.customer.address}</span>
                       </div>
                     </div>
@@ -114,7 +236,7 @@ const OrdersModal = ({ isOpen, onClose, onAddToCart }) => {
                     <div className="mt-4 pt-4 border-t">
                       <button 
                         onClick={() => setSelectedOrder(selectedOrder === order.id ? null : order.id)} 
-                        className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-colors"
+                        className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-all hover:translate-x-1"
                       >
                         <Eye className="w-4 h-4" />
                         <span className="text-sm font-semibold">
@@ -123,12 +245,12 @@ const OrdersModal = ({ isOpen, onClose, onAddToCart }) => {
                       </button>
                       
                       {selectedOrder === order.id && (
-                        <div className="mt-3 space-y-2">
+                        <div className="mt-3 space-y-2 animate-fade-in">
                           {order.items.map((item) => (
-                            <div key={item.id} className="flex items-center gap-3 p-3 bg-white rounded-xl">
-                              <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center overflow-hidden">
+                            <div key={item.id} className="flex items-center gap-3 p-3 bg-white rounded-xl hover:shadow-sm transition-all hover:-translate-y-0.5">
+                              <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center overflow-hidden group">
                                 {item.image ? (
-                                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                  <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                                 ) : (
                                   <span className="text-xl">🐾</span>
                                 )}
@@ -165,9 +287,12 @@ const OrdersModal = ({ isOpen, onClose, onAddToCart }) => {
                     <div className="mt-4 pt-4 border-t">
                       <button 
                         onClick={() => repeatOrder(order)} 
-                        className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-full font-semibold text-sm hover:scale-105 transition-all duration-300"
+                        className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-full font-semibold text-sm hover:scale-105 transition-all duration-300 hover:shadow-lg group"
                       >
-                        Повторить заказ
+                        <span className="inline-flex items-center gap-2">
+                          Повторить заказ 
+                          <Package className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </span>
                       </button>
                     </div>
                   </div>
@@ -195,12 +320,99 @@ const OrdersModal = ({ isOpen, onClose, onAddToCart }) => {
           }
         }
         
+        @keyframes float-box {
+          0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100vh) rotate(360deg);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes float-box-delayed {
+          0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100vh) rotate(-360deg);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes float-gift {
+          0% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100vh) scale(0.5);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes bounce-gentle {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-3px); }
+        }
+        
+        @keyframes ping {
+          0% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          75%, 100% {
+            transform: scale(1.5);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
+        
         .animate-fade-in {
           animation: fade-in 0.2s ease-out forwards;
         }
         
         .animate-modal-in {
           animation: modal-in 0.3s ease-out forwards;
+        }
+        
+        .animate-float-box {
+          animation: float-box 5s ease-in-out infinite;
+        }
+        
+        .animate-float-box-delayed {
+          animation: float-box-delayed 6s ease-in-out infinite;
+        }
+        
+        .animate-float-gift {
+          animation: float-gift 7s ease-in-out infinite;
+        }
+        
+        .animate-float-slow {
+          animation: float-slow 3s ease-in-out infinite;
+        }
+        
+        .animate-bounce-gentle {
+          animation: bounce-gentle 1s ease-in-out infinite;
+        }
+        
+        .animate-ping {
+          animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        
+        .animate-pulse {
+          animation: pulse 1s ease-in-out infinite;
         }
       `}</style>
     </>
